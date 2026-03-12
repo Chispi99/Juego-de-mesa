@@ -1,0 +1,87 @@
+/* Área central de combate con fondo de bosque anime */
+.dropZone {
+    flex-grow: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    padding: 0 50px;
+    background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
+                      url('https://img.freepik.com');
+    background-size: cover;
+    background-position: center;
+    border-bottom: 5px solid #333;
+}
+
+/* Capa donde se mueven los guerreros */
+#entitiesLayer {
+    position: absolute;
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    pointer-events: none;
+}
+
+/* Estilo de las Torres (Santuarios) */
+.fortress {
+    width: 140px;
+    height: 250px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: bottom;
+    z-index: 10;
+    filter: drop-shadow(0 0 10px rgba(0, 242, 255, 0.5));
+}
+
+.leftFortress { 
+    background-image: url('https://cdn-icons-png.flaticon.com'); 
+}
+
+.rightFortress { 
+    background-image: url('https://cdn-icons-png.flaticon.com'); 
+    transform: scaleX(-1); 
+}
+
+/* Estilo de las unidades en el campo */
+.unit {
+    position: absolute;
+    width: 70px; 
+    height: 70px; 
+    bottom: 20%;
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    z-index: 5;
+}
+
+.unitSprite { 
+    width: 100%; 
+    height: 100%; 
+    object-fit: contain; 
+}
+
+/* Animaciones de Caminata */
+@keyframes walkRight {
+    0% { left: 140px; }
+    100% { left: calc(100% - 200px); }
+}
+
+@keyframes walkLeft {
+    0% { right: 140px; }
+    100% { right: calc(100% - 200px); }
+}
+
+.p1Unit { animation: walkRight 5s linear forwards; }
+.p2Unit { animation: walkLeft 5s linear forwards; }
+
+/* Efecto de daño a la torre */
+.shake { 
+    animation: shakeEffect 0.5s ease-in-out; 
+}
+
+@keyframes shakeEffect {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-15px); }
+    75% { transform: translateX(15px); }
+}
