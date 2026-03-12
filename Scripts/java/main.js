@@ -1,6 +1,6 @@
-import { CHARACTERS_LIST } from 'Scripts/java/database/characters.js';
-import { GameView } from 'Scripts/java/views/gameView.js';
-import { GameController } from 'Scripts/java/Controllers/gameControllers.js';
+import { CHARACTERS_LIST } from './database/characters.js';
+import { GameView } from './views/gameView.js';
+import { GameController } from './Controllers/gameControllers.js';
 
 const view = new GameView();
 const game = new GameController();
@@ -14,6 +14,9 @@ const battlefield = document.getElementById('battlefieldArea');
 // 1. Inicializar
 document.addEventListener('DOMContentLoaded', () => {
     view.renderHand(CHARACTERS_LIST);
+    updateKiDisplays();
+    view.updateHealthBars(game.players.player1.hp, game.players.player2.hp);
+    turnText.textContent = `Turno de: ${game.players[game.activePlayer].name}`;
 });
 
 // 2. Dado
@@ -35,6 +38,11 @@ battlefield.addEventListener('drop', (e) => {
     const charId = e.dataTransfer.getData('text/plain');
     const character = CHARACTERS_LIST.find(c => c.id === charId);
     const currentPlayer = game.activePlayer;
+
+    if (!character) {
+        alert('Carta no válida. Arrastra una carta del inventario.');
+        return;
+    }
 
     if (game.canAffordSummon(character.kiCost)) {
         game.spendKi(character.kiCost);
