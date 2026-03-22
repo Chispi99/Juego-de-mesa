@@ -10,16 +10,12 @@ import { TOWERS_DB } from './database/towersData.js';
 document.addEventListener('DOMContentLoaded', () => {
     MinigameController.init();
     
-    // 1. Iniciar Game Loop Global
     EngineController.init();
     
-    // 2. Pintar la Cuadrícula y el Camino
     BoardView.renderGrid(EngineController.board, 'grid-container');
 
-    // 3. Renderizar la Tienda de Torres (Shop en lugar de Mano)
     ShopView.renderShop(TOWERS_DB, 'hand-container');
 
-    // 4. Activar el sistema de Construcción por Drag & Drop
     DragDropController.init();
     
     const btnNext = document.getElementById('btn-next-wave');
@@ -29,7 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 6. Sistema de desbloqueo de torres
     document.addEventListener('unlockTower', (e) => {
         const towerId = e.detail;
         const tower = TOWERS_DB.find(t => t.id === towerId);
@@ -47,7 +42,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 7. Sistema de Venta de torres
     document.addEventListener('sellTower', (e) => {
         const uid = e.detail;
         const tower = EngineController.board.towers.find(t => t.uid === uid);

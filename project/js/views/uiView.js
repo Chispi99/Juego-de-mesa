@@ -1,4 +1,3 @@
-// js/views/uiView.js
 export const UIView = {
     updatePlayerStats(player) {
         document.getElementById('p1-hp').textContent = player.lives;
@@ -15,7 +14,7 @@ export const UIView = {
         if (ind && header) {
             if (isPlaying) {
                 ind.textContent = `Defendiendo`;
-                header.style.color = "#ffffff"; // Blanco absoluto para contrastar
+                header.style.color = "#ffffff"; 
                 header.style.animation = "blinkText 1s infinite";
             } else {
                 ind.textContent = `Preparación`;

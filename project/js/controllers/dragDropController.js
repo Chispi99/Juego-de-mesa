@@ -1,4 +1,3 @@
-// js/controllers/dragDropController.js
 import { EngineController } from './engineController.js';
 import { Tower } from '../types/tower.js';
 import { TOWERS_DB } from '../database/towersData.js';

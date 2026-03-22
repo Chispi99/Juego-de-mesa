@@ -1,4 +1,3 @@
-// js/views/shopView.js
 export const ShopView = {
     renderShop(towersList, containerId) {
         const container = document.getElementById(containerId);

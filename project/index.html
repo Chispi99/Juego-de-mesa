@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Anime Tower Defense Board</title>
-    <!-- CSS imports -->
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/ui.css">
     <link rel="stylesheet" href="css/board.css">
@@ -13,7 +12,6 @@
 </head>
 <body>
     <div id="game-container">
-        <!-- Status Bar (Top) -->
         <header id="status-bar" class="enemy-panel" style="justify-content:center;">
             <h2 id="turn-header" style="animation:none;">
                 <span id="turn-indicator">Preparación</span> - Oleada <span id="wave-counter">1</span>
@@ -21,16 +19,12 @@
             <button id="btn-next-wave" class="btn-neon" style="margin-left: 30px;">Llamar Oleada</button>
         </header>
 
-        <!-- Main Board -->
         <main id="board-area">
-            <!-- Dynamic grid goes here -->
             <div id="grid-container" style="position: relative;">
-                <!-- Absolute container for moving enemies & projectiles via CSS/JS -->
                 <div id="entities-layer" style="position: absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:15;"></div>
             </div>
         </main>
 
-        <!-- Bottom Player (You) UI -->
         <footer id="player1-ui" class="player-panel ally-panel">
             <div class="player-header">
                 <h2 class="player-name">Tu Base</h2>
@@ -39,12 +33,10 @@
                     <p>💰 Oro: <span id="p1-gold">50</span></p>
                 </div>
             </div>
-            <!-- Tienda de Torres -->
             <div id="hand-container" class="cards-hand"></div>
         </footer>
     </div>
 
-    <!-- Dice Minigame Modal -->
     <div id="dice-modal" class="modal-overlay hidden">
         <div class="modal-content enemy-panel">
             <h2 class="player-name" style="text-align: center; margin-bottom: 20px;">Lanzamiento de Recompensa</h2>
@@ -57,7 +49,6 @@
         </div>
     </div>
 
-    <!-- JS Core -->
     <script type="module" src="js/main.js"></script>
 </body>
 </html>

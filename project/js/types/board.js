@@ -1,18 +1,16 @@
-// js/types/board.js
 export class Board {
     constructor(cols = 8, rows = 8) {
         this.cols = cols;
         this.rows = rows;
         this.towers = [];
         
-        // Definimos la ruta de celdas (x, y) por las que caminará el enemigo
         this.path = [
             { x: -1, y: 1 }, 
             { x: 5, y: 1 },
             { x: 5, y: 5 },
             { x: 2, y: 5 },
             { x: 2, y: 7 },
-            { x: 7, y: 7 } // Final dentro del tablero (índices 0-7)
+            { x: 7, y: 7 } 
         ];
     }
 

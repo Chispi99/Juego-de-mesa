@@ -2,13 +2,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&display=swap');
 
 :root {
-    --color-bg-dark: #dc0000; /* P5 Red */
-    --color-neon-cyan: #ffffff; /* White High Contrast */
-    --color-neon-pink: #000000; /* Pure Black Blocks */
-    --color-neon-green: #fffb00; /* Electric Yellow */
+    --color-bg-dark: #dc0000; 
+    --color-neon-cyan: #ffffff; 
+    --color-neon-pink: #000000; 
+    --color-neon-green: #fffb00; 
     --color-neon-gold: #000000; 
-    --color-text-main: #ffffff; /* Letras blancas para destacar en negro */
-    --color-panel-bg: #000000; /* Paneles negros puros */
+    --color-text-main: #ffffff; 
+    --color-panel-bg: #000000; 
     
     --font-anime: 'Bangers', cursive;
     --font-body: 'Black Ops One', sans-serif;
@@ -27,7 +27,6 @@
 
 body {
     background-color: var(--color-bg-dark);
-    /* Franjas negras diagonales en movimiento */
     background-image: repeating-linear-gradient(
         45deg,
         transparent,

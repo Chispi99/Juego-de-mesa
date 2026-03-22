@@ -1,4 +1,3 @@
-/* css/cards.css */
 #hand-container {
     width: 100%;
 }
@@ -29,7 +28,6 @@
     color: white;
 }
 
-/* Foil Effect using before pseudoelement */
 .card::before {
     content: '';
     position: absolute;

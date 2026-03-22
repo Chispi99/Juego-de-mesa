@@ -1,4 +1,3 @@
-// js/views/boardView.js
 export const BoardView = {
     renderGrid(board, containerId) {
         const container = document.getElementById(containerId);
@@ -10,7 +9,6 @@ export const BoardView = {
                 const cell = document.createElement('div');
                 cell.className = 'grid-cell';
                 if (board.isPathCell(x, y)) {
-                    // Cinta de Peligro Negra/Amarilla
                     cell.style.backgroundColor = 'var(--color-neon-green)'; 
                     cell.style.backgroundImage = 'repeating-linear-gradient(45deg, #000 0, #000 10px, transparent 10px, transparent 20px)';
                     cell.style.border = '2px solid white';
@@ -31,7 +29,6 @@ export const BoardView = {
         
         const currentIds = new Set();
         
-        // Render Base (Kame House)
         const baseId = 'player-kame-base';
         currentIds.add(baseId);
         let baseEl = document.getElementById(baseId);
@@ -41,7 +38,7 @@ export const BoardView = {
             baseEl.className = 'unit-token unit-p1';
             baseEl.style.position = 'absolute';
             baseEl.style.backgroundImage = `url(assets/sprites/kame_house.png)`;
-            baseEl.style.borderRadius = '0'; // Edificio
+            baseEl.style.borderRadius = '0'; 
             baseEl.style.pointerEvents = 'none';
             baseEl.style.zIndex = '5';
             
@@ -66,7 +63,7 @@ export const BoardView = {
         baseEl.style.width = `${cellW * baseScale}%`;
         baseEl.style.height = `${cellH * baseScale}%`;
         baseEl.style.zIndex = '15';
-        baseEl.style.boxShadow = '12px 12px 0px var(--color-neon-pink)'; // Shadow giving it massive presence
+        baseEl.style.boxShadow = '12px 12px 0px var(--color-neon-pink)'; 
         baseEl.style.border = '4px solid white';
         
         const baseHpFill = document.getElementById(`${baseId}-hp`);
@@ -76,7 +73,7 @@ export const BoardView = {
             baseHpFill.style.backgroundColor = hpPct > 50 ? '#00ff66' : hpPct > 20 ? '#ffbe0b' : '#ff0055';
         }
 
-        // Render Torres
+     
         board.towers.forEach(t => {
             currentIds.add(t.uid);
             let el = document.getElementById(t.uid);
@@ -98,14 +95,13 @@ export const BoardView = {
                 
                 el.appendChild(hpContainer);
                 
-                // Evento para Vender la Torre (Doble Click)
+       
                 el.addEventListener('dblclick', () => {
                     document.dispatchEvent(new CustomEvent('sellTower', { detail: t.uid }));
                 });
 
                 layer.appendChild(el);
             }
-            // Transition animada por CSS local para no saltar feo
             el.style.left = `${t.x * cellW}%`;
             el.style.top = `${t.y * cellH}%`;
             el.style.width = `${cellW}%`;
@@ -119,7 +115,6 @@ export const BoardView = {
             }
         });
 
-        // Render Enemigos
         enemies.forEach(e => {
             currentIds.add(e.uid);
             let el = document.getElementById(e.uid);
@@ -143,7 +138,7 @@ export const BoardView = {
             }
             
             const isBoss = e.dbRef.id === "e_boss";
-            const scaleFactor = isBoss ? 1.6 : 0.8; // Jefe mide 160% de una celda, normal 80%
+            const scaleFactor = isBoss ? 1.6 : 0.8; 
             const offset = (1 - scaleFactor) / 2;
             
             el.style.left = `${e.x * cellW + (cellW * offset)}%`;
@@ -153,7 +148,7 @@ export const BoardView = {
             el.style.zIndex = isBoss ? '20' : '10';
             
             if (isBoss) {
-                el.style.boxShadow = '12px 12px 0px var(--color-neon-green)'; // Sombra más agresiva
+                el.style.boxShadow = '12px 12px 0px var(--color-neon-green)'; 
             }
             
             const hpFill = document.getElementById(`${e.uid}-hp`);
@@ -164,7 +159,6 @@ export const BoardView = {
             }
         });
         
-        // Render Proyectiles
         projectiles.forEach((p) => {
              currentIds.add(p.uid);
              
@@ -177,13 +171,13 @@ export const BoardView = {
                  el.style.fontSize = '24px';
                  el.style.fontWeight = '900';
                  el.style.fontFamily = 'Bangers, cursive';
-                 el.style.color = '#fffb00'; /* Electric Yellow */
+                 el.style.color = '#fffb00'; 
                  el.style.textShadow = '3px 3px 0px #000';
                  el.style.webkitTextStroke = '1px black';
                  el.style.display = 'flex';
                  el.style.justifyContent = 'center';
                  el.style.alignItems = 'center';
-                 el.innerText = 'BAM!'; /* Comic Onomatopeya */
+                 el.innerText = 'BAM!'; 
                  el.style.transform = 'translate(-50%, -50%) rotate(-15deg)';
                  layer.appendChild(el);
              }
@@ -196,7 +190,6 @@ export const BoardView = {
              el.style.top = `${currentY * cellH + cellH/2}%`;
         });
         
-        // Garbage collection manual
         Array.from(layer.children).forEach(child => {
             if (!currentIds.has(child.id)) {
                 child.remove();

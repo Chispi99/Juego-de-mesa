@@ -1,7 +1,5 @@
-// js/views/handView.js
 
 export const HandView = {
-    // Renderiza las cartas en la mano del jugador
     renderHand(handArray, containerId) {
         const container = document.getElementById(containerId);
         container.innerHTML = '';
@@ -9,7 +7,7 @@ export const HandView = {
         handArray.forEach(card => {
             const cardEl = document.createElement('div');
             cardEl.className = 'card';
-            cardEl.draggable = true; // Permite el drag and drop nativo
+            cardEl.draggable = true; 
             cardEl.dataset.id = card.id;
             cardEl.dataset.cost = card.cost;
             

@@ -1,4 +1,3 @@
-// js/controllers/minigameController.js
 import { UIView } from '../views/uiView.js';
 import { EngineController } from './engineController.js';
 
@@ -9,7 +8,7 @@ export const MinigameController = {
         3: 30,
         4: 40,
         5: 50,
-        6: 100 // Jackpot
+        6: 100 
     },
     faces: ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'],
     isRolling: false,
@@ -59,7 +58,6 @@ export const MinigameController = {
         
         let rolls = 0;
         const interval = setInterval(() => {
-            // Efecto visual rápido de caras aleatorias
             faceEl.textContent = this.faces[Math.floor(Math.random() * 6)];
             rolls++;
             if (rolls > 15) {
@@ -74,7 +72,7 @@ export const MinigameController = {
         const result = Math.floor(Math.random() * 6) + 1;
         this.currentReward = this.rewards[result];
         
-        faceEl.textContent = this.faces[result - 1]; // Arrays indexados de 0 a 5
+        faceEl.textContent = this.faces[result - 1]; 
         
         if (result === 6) {
             resultText.textContent = `¡JACKPOT ANIME! +${this.currentReward} 💰`;
@@ -95,11 +93,9 @@ export const MinigameController = {
     },
 
     claimReward() {
-        // Otorgar oro
         EngineController.player.gold += this.currentReward;
         UIView.updatePlayerStats(EngineController.player);
         
-        // Cerrar modal
         const modal = document.getElementById('dice-modal');
         modal.classList.add('hidden');
     }

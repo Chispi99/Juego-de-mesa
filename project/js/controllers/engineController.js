@@ -1,4 +1,3 @@
-// js/controllers/engineController.js
 import { Board } from '../types/board.js';
 import { Player } from '../types/player.js';
 import { Enemy } from '../types/enemy.js';
@@ -13,7 +12,7 @@ export const EngineController = {
     enemies: [],
     projectiles: [],
     
-    gameState: 'PREP', // PREP, PLAYING, GAMEOVER
+    gameState: 'PREP', 
     currentWaveIndex: 0,
     waveQueue: [],
     spawnTimer: 0,
@@ -63,33 +62,29 @@ export const EngineController = {
     },
 
     update(deltaTime) {
-        // Spawneo
         if (this.waveQueue.length > 0) {
             this.spawnTimer -= deltaTime;
             if (this.spawnTimer <= 0) {
                 const enemyKey = this.waveQueue.shift();
                 const dbRef = ENEMIES_DB[enemyKey];
                 
-                const waveMultiplier = 1 + (this.currentWaveIndex * 0.3); // +30% power por oleada
+                const waveMultiplier = 1 + (this.currentWaveIndex * 0.3); 
                 const newEnemy = new Enemy(`e_${Date.now()}_${Math.random()}`, dbRef, this.board.path, waveMultiplier);
                 
                 this.enemies.push(newEnemy);
-                this.spawnTimer = 2.0; // Espaciado de enemigos para evitar amontonamiento
+                this.spawnTimer = 2.0; 
             }
         }
 
-        // Mover enemigos
         for (let i = this.enemies.length - 1; i >= 0; i--) {
             const enemy = this.enemies[i];
             const reachedEnd = enemy.update(deltaTime);
             if (reachedEnd) {
-                // El daño a la base depende del tipo de enemigo
                 const dmgToHitsBase = enemy.dbRef.baseDamage || 1;
                 this.player.lives -= dmgToHitsBase;
                 this.enemies.splice(i, 1);
                 UIView.updatePlayerStats(this.player);
                 
-                // Screen Flash de Daño
                 document.body.style.boxShadow = "inset 0 0 150px rgba(255,0,0,0.8)";
                 setTimeout(() => document.body.style.boxShadow = "", 200);
                 
@@ -102,7 +97,6 @@ export const EngineController = {
             }
         }
 
-        // Torres disparan
         this.board.towers.forEach(tower => {
             tower.update(deltaTime);
             if (tower.canShoot() && this.enemies.length > 0) {
@@ -119,7 +113,7 @@ export const EngineController = {
                         sx: tower.x, sy: tower.y, 
                         tx: target.x, ty: target.y, 
                         maxLife: 0.2, life: 0.2 
-                    }); // Proyectil viajero
+                    }); 
                     
                     target.takeDamage(tower.dbRef.damage, tower.dbRef.type);
                     
@@ -137,13 +131,12 @@ export const EngineController = {
             }
         });
 
-        // Enemigos atacan torres cercanas
         this.enemies.forEach(e => {
             if (e.attackTimer <= 0) {
                 const targetTower = this.board.towers.find(t => {
                     if (t.currentHp <= 0) return false;
                     const dist = Math.hypot(t.x - e.x, t.y - e.y);
-                    return dist <= 2.0; // Rango de ataque cuerpo a cuerpo/corto circular
+                    return dist <= 2.0; 
                 });
 
                 if (targetTower) {
@@ -153,10 +146,8 @@ export const EngineController = {
             }
         });
 
-        // Limpieza de torres destruidas
         this.board.towers = this.board.towers.filter(t => t.currentHp > 0);
 
-        // Limpiar muertos y recolectar oro (FUERA DEL LOOP DE TORRES)
         this.enemies = this.enemies.filter(e => {
             if (e.currentHp <= 0) {
                 this.player.gold += e.dbRef.reward;
@@ -166,11 +157,10 @@ export const EngineController = {
             return true;
         });
 
-        // Fin de oleada
         if (this.waveQueue.length === 0 && this.enemies.length === 0) {
             this.gameState = 'PREP';
             this.currentWaveIndex++;
-            this.player.gold += 100; // BONO DE OLEADA COMPLETADA
+            this.player.gold += 100; 
             UIView.updatePlayerStats(this.player);
             UIView.updateWaveInfo(this.currentWaveIndex, false);
             
@@ -179,7 +169,6 @@ export const EngineController = {
                 setTimeout(() => alert("¡Victoria Definitiva! Has ganado todas las oleadas de Defensa."), 1500);
             } else {
                 UIView.showToast(`Oleada superada. ¡Lanza los dados!`);
-                // Pausar medio segundo y abrir el Gacha Modal
                 setTimeout(() => {
                     import('./minigameController.js').then(module => {
                         module.MinigameController.start();

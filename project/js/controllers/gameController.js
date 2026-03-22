@@ -1,4 +1,3 @@
-// js/controllers/gameController.js
 import { Board } from '../types/board.js';
 import { Player } from '../types/player.js';
 import { CARDS_DB } from '../database/cardsData.js';
@@ -16,7 +15,6 @@ export const GameController = {
         this.player1.initDeck(CARDS_DB);
         this.player2.initDeck(CARDS_DB);
         
-        // Robo inicial de 3 cartas por jugador
         for(let i = 0; i < 3; i++) {
             this.player1.drawCard();
             this.player2.drawCard();
