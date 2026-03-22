@@ -1,0 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Bangers&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&display=swap');
+
+:root {
+    --color-bg-dark: #dc0000; /* P5 Red */
+    --color-neon-cyan: #ffffff; /* White High Contrast */
+    --color-neon-pink: #000000; /* Pure Black Blocks */
+    --color-neon-green: #fffb00; /* Electric Yellow */
+    --color-neon-gold: #000000; 
+    --color-text-main: #ffffff; /* Letras blancas para destacar en negro */
+    --color-panel-bg: #000000; /* Paneles negros puros */
+    
+    --font-anime: 'Bangers', cursive;
+    --font-body: 'Black Ops One', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+@keyframes slideStripe {
+    0% { background-position: 0 0; }
+    100% { background-position: 100px 100px; }
+}
+
+body {
+    background-color: var(--color-bg-dark);
+    /* Franjas negras diagonales en movimiento */
+    background-image: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 35px,
+        rgba(0, 0, 0, 0.4) 35px,
+        rgba(0, 0, 0, 0.4) 70px
+    );
+    background-size: 100px 100px;
+    animation: slideStripe 3s linear infinite;
+    color: var(--color-text-main);
+    font-family: var(--font-body);
+    font-size: 1.1rem;
+    overflow: hidden; 
+}
+
+#game-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Tower Defense Board</title>
+    <!-- CSS imports -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/ui.css">
+    <link rel="stylesheet" href="css/board.css">
+    <link rel="stylesheet" href="css/cards.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="game-container">
+        <!-- Status Bar (Top) -->
+        <header id="status-bar" class="enemy-panel" style="justify-content:center;">
+            <h2 id="turn-header" style="animation:none;">
+                <span id="turn-indicator">Preparación</span> - Oleada <span id="wave-counter">1</span>
+            </h2>
+            <button id="btn-next-wave" class="btn-neon" style="margin-left: 30px;">Llamar Oleada</button>
+        </header>
+
+        <!-- Main Board -->
+        <main id="board-area">
+            <!-- Dynamic grid goes here -->
+            <div id="grid-container" style="position: relative;">
+                <!-- Absolute container for moving enemies & projectiles via CSS/JS -->
+                <div id="entities-layer" style="position: absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:15;"></div>
+            </div>
+        </main>
+
+        <!-- Bottom Player (You) UI -->
+        <footer id="player1-ui" class="player-panel ally-panel">
+            <div class="player-header">
+                <h2 class="player-name">Tu Base</h2>
+                <div class="stats">
+                    <p>❤️ Vidas: <span id="p1-hp">20</span></p>
+                    <p>💰 Oro: <span id="p1-gold">50</span></p>
+                </div>
+            </div>
+            <!-- Tienda de Torres -->
+            <div id="hand-container" class="cards-hand"></div>
+        </footer>
+    </div>
+
+    <!-- Dice Minigame Modal -->
+    <div id="dice-modal" class="modal-overlay hidden">
+        <div class="modal-content enemy-panel">
+            <h2 class="player-name" style="text-align: center; margin-bottom: 20px;">Lanzamiento de Recompensa</h2>
+            <div id="dice-container" class="dice">
+                <div class="dice-face" id="dice-face">🎲</div>
+            </div>
+            <p id="dice-result-text" style="font-size: 1.5rem; text-align: center; margin: 20px 0; color: white; text-shadow: 2px 2px 0px var(--color-bg-dark);">Tu destino te aguarda...</p>
+            <button id="btn-roll-dice" class="btn-neon" style="display: block; margin: 0 auto;">Lanzar Dado</button>
+            <button id="btn-claim-reward" class="btn-neon hidden" style="display: none; margin: 0 auto; border-color: var(--color-neon-pink); color: var(--color-neon-pink);">Reclamar Botín</button>
+        </div>
+    </div>
+
+    <!-- JS Core -->
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
