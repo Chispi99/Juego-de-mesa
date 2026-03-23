@@ -93,8 +93,11 @@ export const MinigameController = {
     },
 
     claimReward() {
-        EngineController.player.gold += this.currentReward;
-        UIView.updatePlayerStats(EngineController.player);
+        const player = EngineController.players[EngineController.currentPlayerIndex];
+        if (player) {
+            player.gold += this.currentReward;
+            UIView.updatePlayerStats(player);
+        }
         
         const modal = document.getElementById('dice-modal');
         modal.classList.add('hidden');
