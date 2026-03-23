@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     EngineController.init();
     
-    BoardView.renderGrid(EngineController.board, 'grid-container');
+    EngineController.init();
 
     ShopView.renderShop(TOWERS_DB, 'hand-container');
 
@@ -25,15 +25,33 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    const btnToggle2P = document.getElementById('btn-toggle-2p');
+    if (btnToggle2P) {
+        btnToggle2P.addEventListener('click', () => {
+            if (EngineController.gameMode === '1P') {
+                EngineController.setGameMode('2P');
+                btnToggle2P.textContent = 'Modo 1 Jugador';
+                btnToggle2P.style.borderColor = 'var(--color-neon-pink)';
+                btnToggle2P.style.color = 'var(--color-neon-pink)';
+            } else {
+                EngineController.setGameMode('1P');
+                btnToggle2P.textContent = 'Modo 2 Jugadores';
+                btnToggle2P.style.borderColor = 'var(--color-neon-cyan)';
+                btnToggle2P.style.color = 'var(--color-neon-cyan)';
+            }
+        });
+    }
+
     document.addEventListener('unlockTower', (e) => {
         const towerId = e.detail;
         const tower = TOWERS_DB.find(t => t.id === towerId);
         
         if (tower && !tower.unlocked) {
-            if (EngineController.player.gold >= tower.unlockCost) {
-                EngineController.player.gold -= tower.unlockCost;
+            const player = EngineController.players[EngineController.currentPlayerIndex];
+            if (player.gold >= tower.unlockCost) {
+                player.gold -= tower.unlockCost;
                 tower.unlocked = true;
-                UIView.updatePlayerStats(EngineController.player);
+                UIView.updatePlayerStats(player);
                 ShopView.renderShop(TOWERS_DB, 'hand-container');
                 UIView.showToast(`¡${tower.name} desbloqueado!`);
             } else {
@@ -44,12 +62,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('sellTower', (e) => {
         const uid = e.detail;
-        const tower = EngineController.board.towers.find(t => t.uid === uid);
+        const board = EngineController.boards[EngineController.currentPlayerIndex];
+        const player = EngineController.players[EngineController.currentPlayerIndex];
+        
+        const tower = board.towers.find(t => t.uid === uid);
         if (tower) {
             const refund = Math.floor(tower.dbRef.cost * 0.75);
-            EngineController.player.gold += refund;
-            EngineController.board.towers = EngineController.board.towers.filter(t => t.uid !== uid);
-            UIView.updatePlayerStats(EngineController.player);
+            player.gold += refund;
+            board.towers = board.towers.filter(t => t.uid !== uid);
+            UIView.updatePlayerStats(player);
             UIView.showToast(`Torre vendida por +${refund}G`);
         }
     });

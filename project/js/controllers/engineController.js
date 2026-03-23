@@ -7,8 +7,11 @@ import { BoardView } from '../views/boardView.js';
 import { UIView } from '../views/uiView.js';
 
 export const EngineController = {
-    board: null,
-    player: null,
+    gameMode: '1P',
+    boards: [],
+    players: [],
+    currentPlayerIndex: 0,
+    
     enemies: [],
     projectiles: [],
     
@@ -21,11 +24,70 @@ export const EngineController = {
     animFrameId: null,
 
     init() {
-        this.board = new Board(8, 8);
-        this.player = new Player();
+        this.boards = [new Board(8, 8)];
+        this.players = [new Player()];
+        this.currentPlayerIndex = 0;
+        
+        BoardView.renderGrid(this.boards[0], 'grid-container-p1');
         
         this.lastTime = performance.now();
         this.loop(this.lastTime);
+    },
+    
+    setGameMode(mode) {
+        this.gameMode = mode;
+        this.boards = [new Board(8, 8)];
+        this.players = [new Player()];
+        
+        const wrapper1 = document.getElementById('board-wrapper-p1');
+        const wrapper2 = document.getElementById('board-wrapper-p2');
+        
+        wrapper1.classList.remove('inactive-board');
+        BoardView.renderGrid(this.boards[0], 'grid-container-p1');
+        
+        if (mode === '2P') {
+            this.boards.push(new Board(8, 8));
+            this.players.push(new Player());
+            wrapper2.style.display = 'flex';
+            wrapper2.classList.add('inactive-board');
+            BoardView.renderGrid(this.boards[1], 'grid-container-p2');
+        } else {
+            wrapper2.style.display = 'none';
+        }
+        
+        this.currentPlayerIndex = 0;
+        this.currentWaveIndex = 0;
+        this.gameState = 'PREP';
+        this.enemies = [];
+        this.projectiles = [];
+        this.waveQueue = [];
+        
+        this.updateUIForCurrentPlayer();
+        UIView.updateWaveInfo(this.currentWaveIndex, false);
+        UIView.showToast(`Modo ${mode} Activado`);
+    },
+    
+    updateUIForCurrentPlayer() {
+        const label = document.getElementById('player-name-label');
+        if (label) {
+            label.textContent = this.gameMode === '2P' ? `Tu Base (P${this.currentPlayerIndex + 1})` : `Tu Base`;
+            label.style.color = this.currentPlayerIndex === 0 ? 'white' : 'var(--color-neon-pink)';
+        }
+        
+        UIView.updatePlayerStats(this.players[this.currentPlayerIndex]);
+        
+        if (this.gameMode === '2P') {
+            const wrapper1 = document.getElementById('board-wrapper-p1');
+            const wrapper2 = document.getElementById('board-wrapper-p2');
+            
+            if (this.currentPlayerIndex === 0) {
+                wrapper1.classList.remove('inactive-board');
+                wrapper2.classList.add('inactive-board');
+            } else {
+                wrapper1.classList.add('inactive-board');
+                wrapper2.classList.remove('inactive-board');
+            }
+        }
     },
 
     startNextWave() {
@@ -40,7 +102,8 @@ export const EngineController = {
         this.spawnTimer = 2.0;
         
         UIView.updateWaveInfo(this.currentWaveIndex, true);
-        UIView.showToast(`¡Oleada ${this.currentWaveIndex + 1} Iniciada!`);
+        const playerLabel = this.gameMode === '2P' ? ` (P${this.currentPlayerIndex + 1})` : '';
+        UIView.showToast(`¡Oleada ${this.currentWaveIndex + 1} Iniciada${playerLabel}!`);
     },
 
     loop(currentTime) {
@@ -62,6 +125,9 @@ export const EngineController = {
     },
 
     update(deltaTime) {
+        const board = this.boards[this.currentPlayerIndex];
+        const player = this.players[this.currentPlayerIndex];
+        
         if (this.waveQueue.length > 0) {
             this.spawnTimer -= deltaTime;
             if (this.spawnTimer <= 0) {
@@ -69,7 +135,7 @@ export const EngineController = {
                 const dbRef = ENEMIES_DB[enemyKey];
                 
                 const waveMultiplier = 1 + (this.currentWaveIndex * 0.3); 
-                const newEnemy = new Enemy(`e_${Date.now()}_${Math.random()}`, dbRef, this.board.path, waveMultiplier);
+                const newEnemy = new Enemy(`e_${Date.now()}_${Math.random()}`, dbRef, board.path, waveMultiplier);
                 
                 this.enemies.push(newEnemy);
                 this.spawnTimer = 2.0; 
@@ -81,23 +147,24 @@ export const EngineController = {
             const reachedEnd = enemy.update(deltaTime);
             if (reachedEnd) {
                 const dmgToHitsBase = enemy.dbRef.baseDamage || 1;
-                this.player.lives -= dmgToHitsBase;
+                player.lives -= dmgToHitsBase;
                 this.enemies.splice(i, 1);
-                UIView.updatePlayerStats(this.player);
+                UIView.updatePlayerStats(player);
                 
                 document.body.style.boxShadow = "inset 0 0 150px rgba(255,0,0,0.8)";
                 setTimeout(() => document.body.style.boxShadow = "", 200);
                 
-                if (this.player.lives <= 0) {
+                if (player.lives <= 0) {
                     this.gameState = 'GAMEOVER';
-                    alert("¡Te han destruido la base! GAME OVER.");
+                    const loser = this.gameMode === '2P' ? `P${this.currentPlayerIndex + 1}` : 'Jugador';
+                    alert(`¡${loser} ha perdido la base! GAME OVER.`);
                     location.reload();
                     return;
                 }
             }
         }
 
-        this.board.towers.forEach(tower => {
+        board.towers.forEach(tower => {
             tower.update(deltaTime);
             if (tower.canShoot() && this.enemies.length > 0) {
                 const target = this.enemies.find(e => {
@@ -133,7 +200,7 @@ export const EngineController = {
 
         this.enemies.forEach(e => {
             if (e.attackTimer <= 0) {
-                const targetTower = this.board.towers.find(t => {
+                const targetTower = board.towers.find(t => {
                     if (t.currentHp <= 0) return false;
                     const dist = Math.hypot(t.x - e.x, t.y - e.y);
                     return dist <= 2.0; 
@@ -146,12 +213,12 @@ export const EngineController = {
             }
         });
 
-        this.board.towers = this.board.towers.filter(t => t.currentHp > 0);
+        board.towers = board.towers.filter(t => t.currentHp > 0);
 
         this.enemies = this.enemies.filter(e => {
             if (e.currentHp <= 0) {
-                this.player.gold += e.dbRef.reward;
-                UIView.updatePlayerStats(this.player);
+                player.gold += e.dbRef.reward;
+                UIView.updatePlayerStats(player);
                 return false;
             }
             return true;
@@ -159,9 +226,23 @@ export const EngineController = {
 
         if (this.waveQueue.length === 0 && this.enemies.length === 0) {
             this.gameState = 'PREP';
+            player.gold += 100; 
+            UIView.updatePlayerStats(player);
+            
+            if (this.gameMode === '2P') {
+                if (this.currentPlayerIndex === 0) {
+                    this.currentPlayerIndex = 1;
+                    UIView.showToast(`¡Turno de P2!`);
+                    this.updateUIForCurrentPlayer();
+                    UIView.updateWaveInfo(this.currentWaveIndex, false);
+                    return; 
+                } else {
+                    this.currentPlayerIndex = 0;
+                    this.updateUIForCurrentPlayer();
+                }
+            }
+
             this.currentWaveIndex++;
-            this.player.gold += 100; 
-            UIView.updatePlayerStats(this.player);
             UIView.updateWaveInfo(this.currentWaveIndex, false);
             
             if (this.currentWaveIndex >= WAVES_CONFIG.length) {
@@ -179,6 +260,13 @@ export const EngineController = {
     },
 
     render() {
-        BoardView.renderEntities(this.board, this.enemies, this.projectiles, this.player);
+        for (let i = 0; i < this.boards.length; i++) {
+            const layerId = `entities-layer-p${i + 1}`;
+            if (this.currentPlayerIndex === i) {
+                BoardView.renderEntities(this.boards[i], this.enemies, this.projectiles, this.players[i], layerId);
+            } else {
+                BoardView.renderEntities(this.boards[i], [], [], this.players[i], layerId);
+            }
+        }
     }
 };

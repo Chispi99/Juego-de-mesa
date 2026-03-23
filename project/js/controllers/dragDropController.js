@@ -5,7 +5,7 @@ import { UIView } from '../views/uiView.js';
 
 export const DragDropController = {
     init() {
-        const boardArea = document.getElementById('grid-container');
+        const boardArea = document.getElementById('board-area');
         const shopContainer = document.getElementById('hand-container');
 
         shopContainer.addEventListener('dragstart', (e) => {
@@ -27,7 +27,8 @@ export const DragDropController = {
             if (cell) {
                 const x = parseInt(cell.dataset.x);
                 const y = parseInt(cell.dataset.y);
-                if (EngineController.board.isCellEmpty(x, y)) {
+                const board = EngineController.boards[EngineController.currentPlayerIndex];
+                if (board.isCellEmpty(x, y)) {
                     cell.classList.add('drag-over');
                 } else {
                     cell.style.backgroundColor = 'rgba(255,0,0,0.3)';
@@ -60,13 +61,16 @@ export const DragDropController = {
             const towerData = TOWERS_DB.find(t => t.id === towerId);
             if (!towerData) return;
 
-            if (EngineController.board.isCellEmpty(x, y)) {
-                if (EngineController.player.gold >= towerData.cost) {
-                    EngineController.player.gold -= towerData.cost;
-                    UIView.updatePlayerStats(EngineController.player);
+            const board = EngineController.boards[EngineController.currentPlayerIndex];
+            const player = EngineController.players[EngineController.currentPlayerIndex];
+
+            if (board.isCellEmpty(x, y)) {
+                if (player.gold >= towerData.cost) {
+                    player.gold -= towerData.cost;
+                    UIView.updatePlayerStats(player);
                     
                     const newTower = new Tower(`t_${Date.now()}`, towerData, x, y);
-                    EngineController.board.towers.push(newTower);
+                    board.towers.push(newTower);
                 } else {
                     UIView.showToast("💰 Oro Insuficiente 💰");
                 }

@@ -12,22 +12,30 @@
 </head>
 <body>
     <div id="game-container">
-        <header id="status-bar" class="enemy-panel" style="justify-content:center;">
-            <h2 id="turn-header" style="animation:none;">
+        <header id="status-bar" class="enemy-panel" style="justify-content:center; align-items:center;">
+            <button id="btn-toggle-2p" class="btn-neon" style="margin-right: 30px; border-color: var(--color-neon-cyan); color: var(--color-neon-cyan);">Modo 2 Jugadores</button>
+            <h2 id="turn-header" style="animation:none; margin: 0 20px;">
                 <span id="turn-indicator">Preparación</span> - Oleada <span id="wave-counter">1</span>
             </h2>
             <button id="btn-next-wave" class="btn-neon" style="margin-left: 30px;">Llamar Oleada</button>
         </header>
 
         <main id="board-area">
-            <div id="grid-container" style="position: relative;">
-                <div id="entities-layer" style="position: absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:15;"></div>
+            <div id="board-wrapper-p1" class="board-wrapper active-board">
+                <div id="grid-container-p1" class="grid-container" style="position: relative;">
+                    <div id="entities-layer-p1" class="entities-layer" style="position: absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:15;"></div>
+                </div>
+            </div>
+            <div id="board-wrapper-p2" class="board-wrapper hidden-board" style="display: none;">
+                <div id="grid-container-p2" class="grid-container" style="position: relative;">
+                    <div id="entities-layer-p2" class="entities-layer" style="position: absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:15;"></div>
+                </div>
             </div>
         </main>
 
         <footer id="player1-ui" class="player-panel ally-panel">
             <div class="player-header">
-                <h2 class="player-name">Tu Base</h2>
+                <h2 id="player-name-label" class="player-name">Tu Base (P1)</h2>
                 <div class="stats">
                     <p>❤️ Vidas: <span id="p1-hp">20</span></p>
                     <p>💰 Oro: <span id="p1-gold">50</span></p>

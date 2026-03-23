@@ -20,8 +20,8 @@ export const BoardView = {
         }
     },
     
-    renderEntities(board, enemies, projectiles, player) {
-        const layer = document.getElementById('entities-layer');
+    renderEntities(board, enemies, projectiles, player, layerId = 'entities-layer-p1') {
+        const layer = document.getElementById(layerId);
         if (!layer) return;
         
         const cellW = 100 / 8; 
@@ -29,7 +29,7 @@ export const BoardView = {
         
         const currentIds = new Set();
         
-        const baseId = 'player-kame-base';
+        const baseId = `player-kame-base-${layerId}`;
         currentIds.add(baseId);
         let baseEl = document.getElementById(baseId);
         if (!baseEl) {
